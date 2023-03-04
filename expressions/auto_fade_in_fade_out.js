@@ -1,28 +1,31 @@
-// Auto fade in and out
-var durationFrames = 25
+// Auto fade in and out based on layer in and out points
+var durationFrames = effect("opacity")("Slider");
 var duration = framesToTime(durationFrames);
+var padding = framesToTime(effect("opacityPadding")("Slider"));
 var interpolations ={
     "ease":1,
     "linear":2
 };
-var interpolation = interpolations["ease"]
+var interpolation = interpolations["ease"];
+var fadeIn = (time-inPoint-padding)/duration;
+var fadeOut = (time-outPoint+duration+padding)/duration;
 
 
-if(time < inPoint + duration){
+if(time < inPoint + padding + duration){
     // Fade in
 	if(interpolation == 1){
-        ease((time-inPoint)/duration, 0, value);
+        ease(fadeIn, 0, value);
     }else{
-        linear((time-inPoint)/duration, 0, value);
+        linear(fadeIn, 0, value);
 	};
-}else if(time > outPoint - duration){
+}else if(time > outPoint - duration - padding){
     // Fade out
     if(interpolation == 1){
-        ease((time-outPoint+duration)/duration, value, 0);
+        ease(fadeOut, value, 0);
     }else{
-        linear((time-outPoint+duration)/duration, value, 0);
+        linear(fadeOut, value, 0);
 	};
 }else{
-    // Leave alone
+    // Leave value alone between fades
 	value	
 };
